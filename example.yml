@@ -1,0 +1,38 @@
+---
+- request:
+    method: GET
+    path: /api/v1/things
+  response:
+    status: 200
+    headers:
+      - Content-type: application/json
+    body: |
+      [
+        {
+          "id": 1,
+          "name": "the first"
+        },
+        {
+          "id": 2,
+          "name": "the second"
+        }
+      ]
+
+- request:
+    method: GET
+    path: /api/v1/things/1
+  response:
+    status: 200
+    headers:
+      - Content-type: application/json
+    body: |
+      {
+        "id": 1,
+        "name": "the first"
+      }
+
+- request:
+    method: GET
+    path: /api/v1/things/0
+  response:
+    status: 404

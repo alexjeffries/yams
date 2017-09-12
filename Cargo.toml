@@ -1,0 +1,9 @@
+[package]
+name = "yams"
+version = "0.0.1+dev"
+authors = ["Alex Jeffries <mail@alexjeffries.me>"]
+
+[dependencies]
+futures = "0.1.14"
+hyper = "0.11"
+yaml-rust = "0.3"
