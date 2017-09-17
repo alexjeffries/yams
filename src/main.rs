@@ -51,7 +51,7 @@ fn run<'a>(filename: &str) -> Result<(), hyper::Error> {
 
     println!("{}", BANNER);
 
-    let addr = ([127, 0, 0, 1], 3333).into();
+    let addr = ([0, 0, 0, 0], 3333).into();
     let mocks: Vec<lib::Mock> = lib::load_mocks(&contents);
 
 
