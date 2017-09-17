@@ -6,14 +6,16 @@
  *
  */
 
+#[macro_use]
+extern crate clap;
 extern crate hyper;
 extern crate futures;
 
+use clap::{App, ArgMatches};
 use hyper::server::{Http, Request, Response, Service};
 use std::fs::File;
 use std::io::prelude::*;
-use std::env;
-use std::process;
+use std::net::IpAddr;
 
 mod lib;
 
@@ -25,33 +27,43 @@ static BANNER: &'static str = r#"
  |___/
 "#;
 
-static USAGE: &'static str = r#"
-Usage: yams CONFIG_FILENAME
-"#;
-
 fn main() -> () {
-    let args: Vec<String> = env::args().collect();
-    let mut stderr = std::io::stderr();
+    let yaml = load_yaml!("cli.yml");
+    let matches = App::from_yaml(yaml).get_matches();
 
-    if args.len() != 2 {
-        writeln!(&mut stderr, "Please provide a filename\n{}", USAGE)
-            .expect("Could not write to stderr");
-
-        process::exit(1);
-    }
-
-    let filename = &args[1];
-    run(filename).unwrap();
+    let config = parse_matches(&matches);
+    run(config).unwrap();
 }
 
-fn run<'a>(filename: &str) -> Result<(), hyper::Error> {
-    let mut f = File::open(filename).unwrap();
+fn parse_matches<'a>(matches: &'a ArgMatches) -> AppConfig<'a> {
+    let config_filename = matches.value_of("configuration_file")
+        .unwrap();
+
+    let addr: IpAddr = matches.value_of("address")
+        .unwrap()
+        .parse()
+        .expect("Could not parse given address");
+
+    let port: u16 = matches.value_of("port")
+        .unwrap()
+        .parse()
+        .expect("Expected a number for the port");
+
+    AppConfig {
+        config_filename: config_filename,
+        addr: addr,
+        port: port,
+    }
+}
+
+fn run<'a>(app_config: AppConfig) -> Result<(), hyper::Error> {
+    let mut f = File::open(app_config.config_filename).unwrap();
     let mut contents = String::new();
     f.read_to_string(&mut contents).unwrap();
 
     println!("{}", BANNER);
 
-    let addr = ([0, 0, 0, 0], 3333).into();
+    let addr = (app_config.addr, app_config.port).into();
     let mocks: Vec<lib::Mock> = lib::load_mocks(&contents);
 
 
@@ -60,6 +72,12 @@ fn run<'a>(filename: &str) -> Result<(), hyper::Error> {
     let result = server.run();
 
     result
+}
+
+struct AppConfig<'a> {
+    config_filename: &'a str,
+    addr: IpAddr,
+    port: u16,
 }
 
 struct YamsService<'a> {

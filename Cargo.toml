@@ -4,6 +4,7 @@ version = "0.0.1+dev"
 authors = ["Alex Jeffries <mail@alexjeffries.me>"]
 
 [dependencies]
+clap = {version = "~2.26", features = ["yaml"]}
 futures = "0.1.14"
 hyper = "0.11"
 yaml-rust = "0.3"

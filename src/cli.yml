@@ -1,0 +1,40 @@
+---
+name: yams -- yet another mock server
+about: |
+  Copyright (C) 2017  Alex Jeffries
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+args:
+  - configuration_file:
+      short: c
+      long: config
+      value_name: FILE
+      help: Mock configuration
+      takes_value: true
+      required: true
+  - address:
+      short: a
+      long: address
+      value_name: ADDRESS
+      help: Address to bind to
+      takes_value: true
+      default_value: 0.0.0.0
+  - port:
+      short: p
+      long: port
+      value_name: PORT
+      help: Port to bind to
+      takes_value: true
+      default_value: "3333"

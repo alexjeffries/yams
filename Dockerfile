@@ -34,4 +34,4 @@ COPY --from=build-env /work/target/release/yams /usr/local/bin/
 USER nobody
 EXPOSE 3333
 ENTRYPOINT ["/sbin/tini",  "--"]
-CMD ["yams", "/etc/yams.yml"]
+CMD ["yams", "-c", "/etc/yams.yml"]
